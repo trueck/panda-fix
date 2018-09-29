@@ -1,4 +1,3 @@
-Jenkinsfile (Scripted Pipeline)
 node {
     stage('Build') {
         echo 'Building....'
