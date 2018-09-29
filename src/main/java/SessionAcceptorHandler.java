@@ -14,6 +14,13 @@ public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
     private SessionAcceptor echoServer;
     private ChannelHandlerContext ctx;
 
+    /**
+     *
+     * @param sessionAcceptor
+     * @param senderCompId
+     * @param targetCompId
+     * @throws IOException
+     */
     public SessionAcceptorHandler(SessionAcceptor sessionAcceptor, String senderCompId, String targetCompId) throws IOException {
         sessionData = new SessionData(senderCompId, targetCompId);
         this.echoServer = sessionAcceptor;
