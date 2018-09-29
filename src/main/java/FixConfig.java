@@ -12,10 +12,6 @@ public class FixConfig {
     private static Map<String, Properties> fixSessions = new HashMap<>();
     private static Map<String, Properties> tradingSessions = new HashMap<>();
 
-    /**
-     *
-     * @throws IOException
-     */
     public static void load() throws IOException {
         try(BufferedReader fixIni = new BufferedReader(new FileReader("conf/fix.ini"))){
             String line = "";
