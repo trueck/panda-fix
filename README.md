@@ -12,4 +12,6 @@ to/from the other fix engine. The events include logon, logout, resend request, 
 5. It only support single fix version which is 4.2
 6. It can produce a fix message in tag-value format according to fix specification. It can also parse a fix message into
 a java object for application usage.
-7. It can maintain the message sequence and is able to replay if the message sequence number is mismatched.
+7. It can maintain the message sequence and data files. It is able to replay if the message sequence number is mismatched.
+8. It can load a config file to configure the fix sessions.
+9. It can support multiple sessions.
