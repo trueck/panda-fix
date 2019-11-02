@@ -2,31 +2,38 @@ package com.panda.fix;
 
 import com.panda.fix.config.FixConfig;
 import com.panda.fix.constant.FixEngineStatus;
+import com.panda.fix.exception.ApplicationException;
 import com.panda.fix.schedule.StopFixSessionTask;
 import com.panda.fix.session.FixSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class FixEngine {
 
     private static final Logger logger = LoggerFactory.getLogger(FixEngine.class);
     private FixEngineStatus status;
+    private FixConfig fixConfig;
+    private Map<String, FixSession> fixSessions;
 
-    public FixEngine(){
+    public FixEngine() {
         status = FixEngineStatus.STOPPED;
-
-
+        fixConfig = new FixConfig();
+        try {
+            fixConfig.load();
+        } catch (IOException e) {
+            throw new ApplicationException(e);
+        }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new FixEngine().start();
     }
 
-    public void start() throws IOException {
+    public void start() {
         logger.info("Panda Fix starts.");
-        FixConfig.load();
         startFixSessions();
         addShutdownHook();
         status = FixEngineStatus.STARTED;
@@ -48,7 +55,7 @@ public class FixEngine {
     }
 
     private void stopFixSessions() {
-        FixConfig.getFixSessions().forEach((sessionName, fixSession) -> {
+        fixSessions.forEach((sessionName, fixSession) -> {
             stopFixSession(sessionName);
         });
     }
