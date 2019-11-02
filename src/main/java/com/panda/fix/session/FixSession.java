@@ -1,15 +1,24 @@
 package com.panda.fix.session;
 
 import com.panda.fix.constant.FixSessionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 public class FixSession {
+
+    public static final Logger logger = LoggerFactory.getLogger(FixSession.class);
+
     private String sessionName;
     private String targetCompId;
     private String sourceComId;
     private FixSessionType type;
     private int port;
+
+    public void start(){
+        logger.info("Fix sessoin {} is starting.", sessionName);
+    }
 
     public void setSessionName(String sessionName) {
         this.sessionName = sessionName;
