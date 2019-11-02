@@ -1,5 +1,6 @@
 package com.panda.fix.config;
 
+import com.panda.fix.exception.ApplicationException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -13,7 +14,7 @@ public class FixConfig {
     private Map<String, Properties> sessionProperties = new HashMap<>();
     private static Map<String, Properties> tradingSessionProperties = new HashMap<>();
 
-    public void load() throws IOException {
+    public void load() {
         try(BufferedReader fixIni = new BufferedReader(new FileReader("conf/fix.ini"))){
             String line = "";
             String lastLine = "";
@@ -53,6 +54,8 @@ public class FixConfig {
                     getTradingSessionProperties().put(line.substring(line.indexOf("[")+1, line.indexOf("]")).trim(), new Properties());
                 }
             }
+        }catch (IOException e){
+            throw new ApplicationException(e);
         }
     }
 

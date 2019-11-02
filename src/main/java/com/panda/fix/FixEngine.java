@@ -21,11 +21,7 @@ public class FixEngine {
     public FixEngine() {
         status = FixEngineStatus.STOPPED;
         fixConfig = new FixConfig();
-        try {
-            fixConfig.load();
-        } catch (IOException e) {
-            throw new ApplicationException(e);
-        }
+        fixConfig.load();
     }
 
     public static void main(String[] args) {
