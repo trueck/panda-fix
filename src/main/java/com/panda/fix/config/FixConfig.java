@@ -1,7 +1,7 @@
-package com.lby.fixengine.config;
+package com.panda.fix.config;
 
-import com.lby.fixengine.constant.FixSessionType;
-import com.lby.fixengine.session.FixSession;
+import com.panda.fix.constant.FixSessionType;
+import com.panda.fix.session.FixSession;
 
 import java.util.HashMap;
 import java.util.Map;

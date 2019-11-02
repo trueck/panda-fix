@@ -2,7 +2,7 @@ node {
    def mvnHome
    stage('Preparation') { // for display purposes
       // Get some code from a GitHub repository
-      git branch:'develop', url:'https://github.com/edwinbylu/lby-fix-engine.git'
+      git branch:'develop', url:'https://github.com/trueck/panda-fix.git'
       // Get the Maven tool.
       // ** NOTE: This 'M3' Maven tool must be configured
       // **       in the global configuration.

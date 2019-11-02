@@ -1,4 +1,4 @@
-package com.lby.fixengine.constant;
+package com.panda.fix.constant;
 
 public enum FixSessionType {
     ACCEPTOR,
