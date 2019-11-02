@@ -1,3 +1,6 @@
+package com.panda.fix.connector;
+
+import com.panda.fix.handler.SessionInitiatorHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
