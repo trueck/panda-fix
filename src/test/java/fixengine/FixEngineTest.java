@@ -1,6 +1,6 @@
 package fixengine;
 
-import com.panda.fix.LbyFixEngine;
+import com.panda.fix.FixEngine;
 import com.panda.fix.constant.FixEngineStatus;
 import com.panda.fix.constant.FixSessionType;
 import com.panda.fix.session.FixSession;
@@ -13,15 +13,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-public class LbyFixEngineTest {
+public class FixEngineTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(LbyFixEngineTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(FixEngineTest.class);
 
-    private LbyFixEngine fixEngine;
+    private FixEngine fixEngine;
 
     @Before
     public void setup(){
-        fixEngine = new LbyFixEngine("");
+        fixEngine = new FixEngine("");
     }
 
     @Test

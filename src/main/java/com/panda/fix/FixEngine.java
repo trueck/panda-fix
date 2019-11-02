@@ -8,14 +8,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class LbyFixEngine {
+public class FixEngine {
 
-    private static final Logger logger = LoggerFactory.getLogger(LbyFixEngine.class);
+    private static final Logger logger = LoggerFactory.getLogger(FixEngine.class);
     private FixEngineStatus status;
     private FixConfig fixConfig;
     private Map<String, FixSession> sessions;
 
-    public LbyFixEngine(String configPath){
+    public FixEngine(String configPath){
         status = FixEngineStatus.STOPPED;
         fixConfig = new FixConfig();
         fixConfig.load(configPath);
@@ -23,7 +23,7 @@ public class LbyFixEngine {
     }
 
     public static void main(String[] args) {
-        new LbyFixEngine("").start();
+        new FixEngine("").start();
     }
 
     public void start(){
