@@ -3,12 +3,14 @@ package com.panda.fix;
 import com.panda.fix.config.FixConfig;
 import com.panda.fix.constant.FixEngineStatus;
 import com.panda.fix.constant.FixSessionType;
+import com.panda.fix.operator.CommandOperator;
 import com.panda.fix.schedule.StopFixSessionTask;
 import com.panda.fix.session.FixSession;
 import com.panda.fix.util.FixUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -19,6 +21,7 @@ public class FixEngine {
     private FixEngineStatus status;
     private FixConfig fixConfig;
     private Map<String, FixSession> fixSessions;
+    private CommandOperator commandOperator;
 
     public FixEngine() {
         status = FixEngineStatus.STOPPED;
@@ -39,6 +42,12 @@ public class FixEngine {
     public void start() {
         logger.info("Panda Fix starts.");
         startFixSessions();
+
+        commandOperator = new CommandOperator(33000, this);
+
+        commandOperator.start();
+
+
         addShutdownHook();
         status = FixEngineStatus.STARTED;
 
@@ -52,15 +61,20 @@ public class FixEngine {
         });
     }
 
-    private void shutdown() {
+    public void shutdown() {
         logger.info("shutting down Panda fix.");
         stopFixSessions();
+        try {
+            commandOperator.stop();
+        } catch (IOException e) {
+            logger.error("Got error when stopping command operator.", e);
+        }
         logger.info("shutdown done.");
     }
 
     private void stopFixSessions() {
         fixSessions.forEach((sessionName, fixSession) -> {
-            stopFixSession(sessionName);
+            fixSession.stop();
         });
     }
 
@@ -76,6 +90,8 @@ public class FixEngine {
         });
 
     }
+
+
 
     private FixSession createFixSession(String sessionName, Properties sessionProp) {
         FixSession fixSession = new FixSession();

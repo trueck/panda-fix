@@ -28,6 +28,11 @@ public class FixSession {
         fixSessionConnection.start();
     }
 
+    public void stop(){
+        logger.info("stopping {}", sessionName);
+        fixSessionConnection.stop();
+    }
+
     public void setSessionName(String sessionName) {
         this.sessionName = sessionName;
     }
@@ -83,4 +88,6 @@ public class FixSession {
     public void setFixSessionConnection(FixSessionConnection fixSessionConnection) {
         this.fixSessionConnection = fixSessionConnection;
     }
+
+
 }

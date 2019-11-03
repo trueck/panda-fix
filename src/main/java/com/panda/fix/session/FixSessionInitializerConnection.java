@@ -7,6 +7,8 @@ import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class FixSessionInitializerConnection extends FixSessionConnection{
 
     private static final Logger logger = LoggerFactory.getLogger(FixSessionInitializerConnection.class);
@@ -28,6 +30,27 @@ public class FixSessionInitializerConnection extends FixSessionConnection{
         startSessionInitiator();
 
 
+    }
+
+    @Override
+    public void stop() {
+        if(status.equals(SessionStatus.DISCONNECTED) || status.equals(SessionStatus.DISCONNECTING) || status.equals(SessionStatus.SUSPENDED)){
+            logger.info("session already stopped: {}", sessionName);
+            return;
+        }
+
+        setStatus(SessionStatus.DISCONNECTING);
+        try {
+            getSessionInitiator().getSessionInitiatorHandler().sendLogoutMessage();
+
+            Thread.sleep(1000);
+            getChannelFuture().channel().close();
+            getChannelFuture().channel().closeFuture();
+            getSessionInitiator().stop();
+            setStatus(SessionStatus.DISCONNECTED);
+        } catch (Exception e) {
+            logger.error("Got error when stopping fix session " + sessionName, e);
+        }
     }
 
     private void startSessionInitiator() {
