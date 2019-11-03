@@ -15,9 +15,17 @@ public class FixSession {
     private String sourceComId;
     private FixSessionType type;
     private int port;
+    private String host;
+    private FixSessionConnection fixSessionConnection;
 
     public void start(){
         logger.info("Fix sessoin {} is starting.", sessionName);
+        if(type.equals(FixSessionType.INITIATOR)){
+            fixSessionConnection = new FixSessionInitializerConnection(this);
+        }else{
+            fixSessionConnection = new FixSessionAcceptorConnection(this);
+        }
+        fixSessionConnection.start();
     }
 
     public void setSessionName(String sessionName) {
@@ -60,20 +68,19 @@ public class FixSession {
         return port;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FixSession that = (FixSession) o;
-        return port == that.port &&
-                Objects.equals(sessionName, that.sessionName) &&
-                Objects.equals(targetCompId, that.targetCompId) &&
-                Objects.equals(sourceComId, that.sourceComId) &&
-                type == that.type;
+    public String getHost() {
+        return host;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(sessionName, targetCompId, sourceComId, type, port);
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public FixSessionConnection getFixSessionConnection() {
+        return fixSessionConnection;
+    }
+
+    public void setFixSessionConnection(FixSessionConnection fixSessionConnection) {
+        this.fixSessionConnection = fixSessionConnection;
     }
 }
