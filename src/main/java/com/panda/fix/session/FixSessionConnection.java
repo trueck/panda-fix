@@ -9,16 +9,19 @@ import org.slf4j.LoggerFactory;
 public abstract class FixSessionConnection {
 
     private static final Logger logger = LoggerFactory.getLogger(FixSessionConnection.class);
+
     protected String sessionName;
-    protected FixSession fixSession;
+    protected String host;
+    protected int port;
     protected String status;
     protected ChannelFuture channelFuture;
     protected SessionInitiator sessionInitiator;
     protected SessionAcceptor sessionAcceptor;
 
-    public FixSessionConnection(FixSession fixSession){
-        sessionName = fixSession.getSessionName();
-        this.fixSession = fixSession;
+    public FixSessionConnection(String sessionName, String host, int port){
+        this.sessionName = sessionName;
+        this.host = host;
+        this.port = port;
     }
 
     public abstract void start();
@@ -39,14 +42,6 @@ public abstract class FixSessionConnection {
 
     public void setSessionName(String sessionName) {
         this.sessionName = sessionName;
-    }
-
-    public FixSession getFixSession() {
-        return fixSession;
-    }
-
-    public void setFixSession(FixSession fixSession) {
-        this.fixSession = fixSession;
     }
 
     public String getStatus() {
@@ -79,5 +74,21 @@ public abstract class FixSessionConnection {
 
     public void setSessionAcceptor(SessionAcceptor sessionAcceptor) {
         this.sessionAcceptor = sessionAcceptor;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

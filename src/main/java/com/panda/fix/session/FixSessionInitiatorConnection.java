@@ -3,18 +3,17 @@ package com.panda.fix.session;
 import com.panda.fix.connector.SessionInitiator;
 import com.panda.fix.constant.SessionStatus;
 import com.panda.fix.exception.ApplicationException;
+import com.panda.fix.util.FixUtil;
 import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+public class FixSessionInitiatorConnection extends FixSessionConnection{
 
-public class FixSessionInitializerConnection extends FixSessionConnection{
+    private static final Logger logger = LoggerFactory.getLogger(FixSessionInitiatorConnection.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(FixSessionInitializerConnection.class);
-
-    public FixSessionInitializerConnection(FixSession fixSession){
-        super(fixSession);
+    public FixSessionInitiatorConnection(String sessionName, String host, int port){
+        super(sessionName, host, port);
     }
 
     @Override
@@ -28,8 +27,6 @@ public class FixSessionInitializerConnection extends FixSessionConnection{
         }
 
         startSessionInitiator();
-
-
     }
 
     @Override
@@ -57,10 +54,11 @@ public class FixSessionInitializerConnection extends FixSessionConnection{
 
         setStatus(SessionStatus.CONNECTING);
 
-        String remoteHost = fixSession.getHost();
-        int remotePort = fixSession.getPort();
-
-        final SessionInitiator sessionInitiator = new SessionInitiator(remoteHost, remotePort, fixSession.getSourceComId(), fixSession.getTargetCompId(), null);
+        final SessionInitiator sessionInitiator = new SessionInitiator(host,
+                port,
+                FixUtil.getSourceCompIdFromSessionName(sessionName),
+                FixUtil.getTargetCompIdFromSessionName(sessionName),
+                null);
 
         try{
             ChannelFuture f = sessionInitiator.start();
