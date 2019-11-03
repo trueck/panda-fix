@@ -6,6 +6,8 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.CharsetUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -13,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class SessionInitiatorHandler extends SimpleChannelInboundHandler<ByteBuf> {
+
+    private static final Logger logger = LoggerFactory.getLogger(SessionInitiatorHandler.class);
 
     private SessionData sessionData;
     private ChannelHandlerContext ctx;
@@ -73,6 +77,11 @@ public class SessionInitiatorHandler extends SimpleChannelInboundHandler<ByteBuf
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf in) throws Exception {
 
         String msg = in.toString((CharsetUtil.US_ASCII));
+        logger.info("received: {}", msg);
+
+        if(msg.length() < 100){
+            return;
+        }
 
         sessionData.updateInSeq(sessionData.getSeqFromMessage(msg));
         sessionData.writeToInDataFile(msg);

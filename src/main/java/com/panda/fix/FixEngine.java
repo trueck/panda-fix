@@ -25,6 +25,11 @@ public class FixEngine {
         fixConfig = new FixConfig();
         fixConfig.load();
         fixSessions = new HashMap<>();
+        fixConfig.getSessionProperties().forEach((sessionName, sessionProp)->{
+            FixSession fixSession = createFixSession(sessionName, sessionProp);
+            fixSessions.put(sessionName, fixSession);
+
+        });
     }
 
     public static void main(String[] args) {
@@ -65,11 +70,7 @@ public class FixEngine {
 
     private void startFixSessions() {
 
-        fixConfig.getSessionProperties().forEach((sessionName, sessionProp)->{
-            FixSession fixSession = createFixSession(sessionName, sessionProp);
-            fixSessions.put(sessionName, fixSession);
 
-        });
         fixSessions.forEach((sessionName, fixSession) -> {
             fixSession.start();
         });
@@ -82,6 +83,7 @@ public class FixEngine {
         fixSession.setType(sessionProp.containsKey("remote_port")?FixSessionType.INITIATOR:FixSessionType.ACCEPTOR);
         String port = sessionProp.containsKey("remote_port")?sessionProp.getProperty("remote_port"):sessionProp.getProperty("listener_port");
         fixSession.setPort(Integer.parseInt(port));
+        fixSession.setHost(sessionProp.getProperty("remote_host"));
         fixSession.setSourceComId(FixUtil.getSourceCompIdFromSessionName(sessionName));
         fixSession.setTargetCompId(FixUtil.getTargetCompIdFromSessionName(sessionName));
 
@@ -97,6 +99,23 @@ public class FixEngine {
         status = FixEngineStatus.STOPPED;
     }
 
+    public void setStatus(FixEngineStatus status) {
+        this.status = status;
+    }
 
+    public FixConfig getFixConfig() {
+        return fixConfig;
+    }
 
+    public void setFixConfig(FixConfig fixConfig) {
+        this.fixConfig = fixConfig;
+    }
+
+    public Map<String, FixSession> getFixSessions() {
+        return fixSessions;
+    }
+
+    public void setFixSessions(Map<String, FixSession> fixSessions) {
+        this.fixSessions = fixSessions;
+    }
 }
