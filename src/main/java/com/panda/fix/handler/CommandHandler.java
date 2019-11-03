@@ -1,5 +1,6 @@
 package com.panda.fix.handler;
 
+import com.panda.fix.FixEngine;
 import com.panda.fix.operator.Command;
 import com.panda.fix.operator.CommandFactory;
 import com.panda.fix.operator.CommandOperator;
@@ -19,24 +20,24 @@ public class CommandHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
-    private CommandOperator commandOperator;
+    private FixEngine fixEngine;
     private ChannelHandlerContext ctx;
 
-    public CommandHandler(CommandOperator commandOperator) throws IOException {
+    public CommandHandler(FixEngine fixEngine) {
 
-        this.commandOperator = commandOperator;
+        this.fixEngine = fixEngine;
     }
 
 
 
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         this.ctx = ctx;
         ByteBuf in = (ByteBuf) msg;
         String inMsg = in.toString(CharsetUtil.US_ASCII);
 
         logger.info("Received command: {}", inMsg);
 
-        Command command = CommandFactory.createCommand(inMsg);
+        Command command = CommandFactory.createCommand(inMsg, fixEngine);
 
         command.execute();
 

@@ -1,6 +1,8 @@
 package com.panda.fix.connector;
 
+import com.panda.fix.constant.SessionStatus;
 import com.panda.fix.handler.SessionAcceptorHandler;
+import com.panda.fix.session.FixSessionConnection;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -21,15 +23,17 @@ public class SessionAcceptor {
     private final String senderCompId;
     private final String targetCompId;
     private SessionAcceptorHandler sessionAcceptorHandler;
+    private FixSessionConnection fixSessionConnection;
 
-    public SessionAcceptor(int port, String senderCompId, String targetCompId) {
+    public SessionAcceptor(int port, String senderCompId, String targetCompId, FixSessionConnection fixSessionConnection) {
         this.port = port;
         this.senderCompId = senderCompId;
         this.targetCompId = targetCompId;
+        this.fixSessionConnection = fixSessionConnection;
     }
 
     public ChannelFuture start() throws Exception{
-        sessionAcceptorHandler = new SessionAcceptorHandler(this, this.senderCompId, this.targetCompId);
+        sessionAcceptorHandler = new SessionAcceptorHandler(this, this.senderCompId, this.targetCompId, fixSessionConnection);
         group = new NioEventLoopGroup();
         try{
             ServerBootstrap b = new ServerBootstrap();
@@ -44,6 +48,7 @@ public class SessionAcceptor {
                         }
                     });
             ChannelFuture f = b.bind().sync();
+
             return f;
         }finally {
 

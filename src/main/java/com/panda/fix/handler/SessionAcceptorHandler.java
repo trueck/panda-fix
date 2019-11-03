@@ -1,6 +1,9 @@
 package com.panda.fix.handler;
 
 import com.panda.fix.connector.SessionAcceptor;
+import com.panda.fix.constant.SessionStatus;
+import com.panda.fix.session.FixSession;
+import com.panda.fix.session.FixSessionConnection;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,10 +19,12 @@ public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
     private SessionData sessionData;
     private SessionAcceptor echoServer;
     private ChannelHandlerContext ctx;
+    private FixSessionConnection fixSessionConnection;
 
-    public SessionAcceptorHandler(SessionAcceptor sessionAcceptor, String senderCompId, String targetCompId) throws IOException {
+    public SessionAcceptorHandler(SessionAcceptor sessionAcceptor, String senderCompId, String targetCompId, FixSessionConnection fixSessionConnection) throws IOException {
         sessionData = new SessionData(senderCompId, targetCompId);
         this.echoServer = sessionAcceptor;
+        this.fixSessionConnection = fixSessionConnection;
     }
 
     public void sendLogoutMessage() throws IOException{
@@ -64,6 +69,7 @@ public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
             sendLoginAck();
             sendHeartbeat();
             sessionData.setLogout(false);
+            fixSessionConnection.setStatus(SessionStatus.CONNECTED);
         }
         if(!sessionData.isLogout() && sessionData.isLogoutMsg(inMsg)){
             sendLogoutMessage();

@@ -6,4 +6,5 @@ public class SessionStatus {
     public static final String CONNECTED = "connected";
     public static final String UNKNOWN = "unknown";
     public static final String SUSPENDED = "suspended";
+    public static final String DISCONNECTING = "disconnecting";
 }

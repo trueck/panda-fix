@@ -23,9 +23,7 @@ public abstract class FixSessionConnection {
 
     public abstract void start();
 
-    public void stop(){
-
-    }
+    public abstract void stop();
 
     public void send(String message){
 

@@ -34,17 +34,39 @@ public class FixSessionAcceptorConnection extends FixSessionConnection{
 
         int listenerPort = fixSession.getPort();
 
-        final SessionAcceptor sessionAcceptor = new SessionAcceptor(listenerPort, fixSession.getSourceComId(), fixSession.getTargetCompId());
+        final SessionAcceptor sessionAcceptor = new SessionAcceptor(listenerPort, fixSession.getSourceComId(), fixSession.getTargetCompId(), this);
 
         try{
+            setStatus(SessionStatus.DISCONNECTED);
             ChannelFuture f = sessionAcceptor.start();
             setChannelFuture(f);
             setSessionAcceptor(sessionAcceptor);
         }catch (Exception e){
-            setStatus(SessionStatus.DISCONNECTED);
             throw new ApplicationException("failed to start session:" + sessionName, e);
         }
-        setStatus(SessionStatus.CONNECTED);
+
         logger.info("session started: {}", sessionName);
+    }
+
+    @Override
+    public void stop() {
+        boolean sendLogout = true;
+        if(status.equals(SessionStatus.DISCONNECTED) || status.equals(SessionStatus.DISCONNECTING) || status.equals(SessionStatus.SUSPENDED)){
+            logger.info("session already stopped: {}", sessionName);
+            sendLogout = false;
+        }
+
+        setStatus(SessionStatus.DISCONNECTING);
+        try {
+            if(sendLogout){
+                getSessionAcceptor().getSessionAcceptorHandler().sendLogoutMessage();
+                Thread.sleep(1000);
+            }
+
+            getChannelFuture().channel().closeFuture();
+            getSessionAcceptor().stop();
+        } catch (Exception e) {
+            logger.error("Got error when stopping fix session " + sessionName, e);
+        }
     }
 }
