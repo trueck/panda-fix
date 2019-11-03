@@ -4,11 +4,9 @@ import com.panda.fix.constant.FixSessionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-
 public class FixSession {
 
-    public static final Logger logger = LoggerFactory.getLogger(FixSession.class);
+    private static final Logger logger = LoggerFactory.getLogger(FixSession.class);
 
     private String sessionName;
     private String targetCompId;
@@ -19,11 +17,11 @@ public class FixSession {
     private FixSessionConnection fixSessionConnection;
 
     public void start(){
-        logger.info("Fix sessoin {} is starting.", sessionName);
+        logger.info("Fix session {} is starting.", sessionName);
         if(type.equals(FixSessionType.INITIATOR)){
-            fixSessionConnection = new FixSessionInitializerConnection(this);
+            fixSessionConnection = new FixSessionInitiatorConnection(sessionName, host, port);
         }else{
-            fixSessionConnection = new FixSessionAcceptorConnection(this);
+            fixSessionConnection = new FixSessionAcceptorConnection(sessionName, host, port);
         }
         fixSessionConnection.start();
     }

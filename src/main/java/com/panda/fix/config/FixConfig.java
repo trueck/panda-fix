@@ -2,6 +2,8 @@ package com.panda.fix.config;
 
 import com.panda.fix.exception.ApplicationException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,8 +13,11 @@ import java.util.Map;
 import java.util.Properties;
 
 public class FixConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(FixConfig.class);
+
     private Map<String, Properties> sessionProperties = new HashMap<>();
-    private static Map<String, Properties> tradingSessionProperties = new HashMap<>();
+    private Map<String, Properties> tradingSessionProperties = new HashMap<>();
 
     public void load() {
         try(BufferedReader fixIni = new BufferedReader(new FileReader("conf/fix.ini"))){
@@ -55,6 +60,7 @@ public class FixConfig {
                 }
             }
         }catch (IOException e){
+            logger.error("Got error when loading the fix ini.", e);
             throw new ApplicationException(e);
         }
     }
@@ -67,11 +73,11 @@ public class FixConfig {
         this.sessionProperties = sessionProperties;
     }
 
-    public static Map<String, Properties> getTradingSessionProperties() {
+    public Map<String, Properties> getTradingSessionProperties() {
         return tradingSessionProperties;
     }
 
-    public static void setTradingSessionProperties(Map<String, Properties> tradingSessionProperties) {
-        FixConfig.tradingSessionProperties = tradingSessionProperties;
+    public void setTradingSessionProperties(Map<String, Properties> tradingSessionProperties) {
+        this.tradingSessionProperties = tradingSessionProperties;
     }
 }

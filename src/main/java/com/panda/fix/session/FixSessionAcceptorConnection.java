@@ -3,6 +3,7 @@ package com.panda.fix.session;
 import com.panda.fix.connector.SessionAcceptor;
 import com.panda.fix.constant.SessionStatus;
 import com.panda.fix.exception.ApplicationException;
+import com.panda.fix.util.FixUtil;
 import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +12,8 @@ public class FixSessionAcceptorConnection extends FixSessionConnection{
 
     private static final Logger logger = LoggerFactory.getLogger(FixSessionAcceptorConnection.class);
 
-    public FixSessionAcceptorConnection(FixSession fixSession) {
-        super(fixSession);
+    public FixSessionAcceptorConnection(String sessionName, String host, int port) {
+        super(sessionName, host, port);
     }
 
     @Override
@@ -29,12 +30,10 @@ public class FixSessionAcceptorConnection extends FixSessionConnection{
     }
 
     private void startSessionAcceptor() {
-        String sessionName = fixSession.getSessionName();
+
         setStatus(SessionStatus.CONNECTING);
 
-        int listenerPort = fixSession.getPort();
-
-        final SessionAcceptor sessionAcceptor = new SessionAcceptor(listenerPort, fixSession.getSourceComId(), fixSession.getTargetCompId(), this);
+        final SessionAcceptor sessionAcceptor = new SessionAcceptor(port, FixUtil.getSourceCompIdFromSessionName(sessionName), FixUtil.getTargetCompIdFromSessionName(sessionName), this);
 
         try{
             setStatus(SessionStatus.DISCONNECTED);
