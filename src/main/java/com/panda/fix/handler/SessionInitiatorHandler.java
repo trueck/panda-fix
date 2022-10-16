@@ -79,7 +79,8 @@ public class SessionInitiatorHandler extends SimpleChannelInboundHandler<ByteBuf
         String msg = in.toString((CharsetUtil.US_ASCII));
         logger.info("received: {}", msg);
 
-        if(msg.length() < 100){
+        if(msg.length() < 50){
+            logger.info("ignore the message as the length of the message is less than 50.");
             return;
         }
 
