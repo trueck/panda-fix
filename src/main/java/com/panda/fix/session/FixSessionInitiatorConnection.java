@@ -66,7 +66,7 @@ public class FixSessionInitiatorConnection extends FixSessionConnection{
             setSessionInitiator(sessionInitiator);
         } catch (Exception e){
             setStatus(SessionStatus.DISCONNECTED);
-            throw new ApplicationException("failed to start session:" + sessionName, e);
+            throw new ApplicationException("failed to start session:" + sessionName + ", caused by: " + e.getCause().getMessage());
         }
         setStatus(SessionStatus.CONNECTED);
         logger.info("session started: {}", sessionName);

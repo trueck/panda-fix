@@ -9,6 +9,8 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.CharsetUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
 
+    private static final Logger logger = LoggerFactory.getLogger(SessionAcceptorHandler.class);
     private SessionData sessionData;
     private SessionAcceptor echoServer;
     private ChannelHandlerContext ctx;
@@ -62,6 +65,7 @@ public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
         ByteBuf in = (ByteBuf)msg;
         String inMsg = in.toString(CharsetUtil.US_ASCII);
 
+        logger.info("Received message [{}]", inMsg);
         sessionData.updateInSeq(sessionData.getSeqFromMessage(inMsg));
         sessionData.writeToInDataFile(inMsg);
 

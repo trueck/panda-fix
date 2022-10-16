@@ -87,7 +87,7 @@ public class SessionData {
 
         String sendingTime = formatDate(new Date(), SENDING_TIME_FORMAT);
 
-        StringBuilder sb = new StringBuilder("35=A 49=").append(this.senderCompId).append(" 56=").append(this.targetCompId).append("34=").append(outSeq).append(" 52=").append(sendingTime).append(" 98=0 108=30 ");
+        StringBuilder sb = new StringBuilder("35=A 49=").append(this.senderCompId).append(" 56=").append(this.targetCompId).append(" 34=").append(outSeq).append(" 52=").append(sendingTime).append(" 98=0 108=30 ");
 
         StringBuilder msg = new StringBuilder("8=FIX.4.2 9=").append(sb.length()).append(" ").append(sb);
 
@@ -123,7 +123,7 @@ public class SessionData {
     public String createLogoutMsg(){
         String sendingTime = formatDate(new Date(), SENDING_TIME_FORMAT);
 
-        StringBuilder sb = new StringBuilder("35=5 49=").append(this.senderCompId).append(" 56=").append(this.targetCompId).append("34=").append(outSeq).append(" 52=").append(sendingTime).append(" 98=0 108=30 ");
+        StringBuilder sb = new StringBuilder("35=5 49=").append(this.senderCompId).append(" 56=").append(this.targetCompId).append(" 34=").append(outSeq).append(" 52=").append(sendingTime).append(" 98=0 108=30 ");
 
         StringBuilder msg = new StringBuilder("8=FIX.4.2 9=").append(sb.length()).append(" ").append(sb);
 
@@ -143,7 +143,7 @@ public class SessionData {
 
         String sendingTime = formatDate(new Date(), SENDING_TIME_FORMAT);
 
-        StringBuilder sb = new StringBuilder("35=0 49=").append(this.senderCompId).append(" 56=").append(this.targetCompId).append("34=").append(outSeq).append(" 52=").append(sendingTime).append(" 98=0 108=30 ");
+        StringBuilder sb = new StringBuilder("35=0 49=").append(this.senderCompId).append(" 56=").append(this.targetCompId).append(" 34=").append(outSeq).append(" 52=").append(sendingTime).append(" 98=0 108=30 ");
 
         StringBuilder msg = new StringBuilder("8=FIX.4.2 9=").append(sb.length()).append(" ").append(sb);
 
@@ -159,8 +159,8 @@ public class SessionData {
     }
 
     public int getSeqFromMessage(String msg) {
-        int start = msg.indexOf("\u000134=")+4;
-        int end = msg.indexOf('\u0001', start);
+        int start = msg.indexOf(" 34=")+4;
+        int end = msg.indexOf(' ', start);
         return Integer.parseInt(msg.substring(start, end));
     }
 

@@ -20,9 +20,9 @@ public class FixEngine {
     private Map<String, FixSession> fixSessions;
     private CommandOperator commandOperator;
 
-    public FixEngine() {
+    public FixEngine(String configFile) {
         fixConfig = new FixConfig();
-        fixConfig.load();
+        fixConfig.load(configFile);
         fixSessions = new HashMap<>();
         fixConfig.getSessionProperties().forEach((sessionName, sessionProp)->{
             FixSession fixSession = createFixSession(sessionName, sessionProp);
@@ -43,7 +43,7 @@ public class FixEngine {
     }
 
     public static void main(String[] args) {
-        new FixEngine().start();
+        new FixEngine(args[0]).start();
     }
 
 
@@ -56,7 +56,7 @@ public class FixEngine {
     }
 
     private void startCommandOperator(){
-        commandOperator = new CommandOperator(33000, this);
+        commandOperator = new CommandOperator(34000, this);
         commandOperator.start();
     }
 
@@ -83,7 +83,11 @@ public class FixEngine {
 
     private void startFixSessions() {
         fixSessions.forEach((sessionName, fixSession) -> {
-            fixSession.start();
+            try {
+                fixSession.start();
+            }catch (Exception e){
+                logger.error(e.getMessage());
+            }
         });
     }
 

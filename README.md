@@ -15,3 +15,10 @@ a java object for application usage.
 7. It can maintain the message sequence and data files. It is able to replay if the message sequence number is mismatched.
 8. It can load a config file to configure the fix sessions.
 9. It can support multiple sessions.
+
+Start the app in local:
+start sell side fix engine to listen:
+java com.panda.fix.FixEngine conf/fix-sell.ini
+
+start buy side fix engine to initial the connection:
+java com.panda.fix.FixEngine conf/fix-buy.ini

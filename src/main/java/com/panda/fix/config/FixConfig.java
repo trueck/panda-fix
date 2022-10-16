@@ -19,8 +19,12 @@ public class FixConfig {
     private Map<String, Properties> sessionProperties = new HashMap<>();
     private Map<String, Properties> tradingSessionProperties = new HashMap<>();
 
-    public void load() {
-        try(BufferedReader fixIni = new BufferedReader(new FileReader("conf/fix.ini"))){
+    public void load(){
+        load("conf/fix.ini");
+    }
+
+    public void load(String configFile) {
+        try(BufferedReader fixIni = new BufferedReader(new FileReader(configFile))){
             String line = "";
             String lastLine = "";
             boolean nextBlock = false;

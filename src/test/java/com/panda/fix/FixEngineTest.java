@@ -13,7 +13,7 @@ public class FixEngineTest {
 
     @Before
     public void setup(){
-        fixEngine = new FixEngine();
+        fixEngine = new FixEngine("conf/fix.ini");
     }
 
 
