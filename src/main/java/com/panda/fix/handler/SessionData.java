@@ -15,7 +15,7 @@ public class SessionData {
     private String targetCompId;
     private int outSeq;
     private int inSeq;
-    private boolean logout;
+    private volatile boolean logout;
     private String sessionName;
     private String inSeqFileName;
     private String outSeqFileName;
@@ -71,7 +71,7 @@ public class SessionData {
 
 
     public void setLogout(boolean b) {
-
+        logout = b;
     }
 
     public void writeToOutDataFile(String message) throws IOException {

@@ -6,6 +6,7 @@ import com.panda.fix.session.FixSession;
 import com.panda.fix.session.FixSessionConnection;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.CharsetUtil;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+@ChannelHandler.Sharable
 public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionAcceptorHandler.class);
