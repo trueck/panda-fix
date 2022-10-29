@@ -21,8 +21,7 @@ public class FixEngine {
     private CommandOperator commandOperator;
 
     public FixEngine(String configFile) {
-        fixConfig = new FixConfig();
-        fixConfig.load(configFile);
+        fixConfig = new FixConfig(configFile);
         fixSessions = new HashMap<>();
         fixConfig.getSessionProperties().forEach((sessionName, sessionProp)->{
             FixSession fixSession = createFixSession(sessionName, sessionProp);

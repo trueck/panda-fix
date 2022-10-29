@@ -19,8 +19,12 @@ public class FixConfig {
     private Map<String, Properties> sessionProperties = new HashMap<>();
     private Map<String, Properties> tradingSessionProperties = new HashMap<>();
 
-    public void load(){
+    public FixConfig() {
         load("conf/fix.ini");
+    }
+
+    public FixConfig(String configFile) {
+        load(configFile);
     }
 
     public void load(String configFile) {

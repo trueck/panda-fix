@@ -9,7 +9,6 @@ public class FixConfigTest {
     @Test
     public void testLoad() {
         FixConfig fixConfig = new FixConfig();
-        fixConfig.load();
         assertEquals(2, fixConfig.getSessionProperties().size());
         assertEquals(1, fixConfig.getTradingSessionProperties().size());
         assertEquals("31000", fixConfig.getSessionProperties().get("NEWFIXENGINE-APPIA").getProperty("remote_port"));
