@@ -26,14 +26,9 @@ public class SessionInitiatorHandler extends SimpleChannelInboundHandler<ByteBuf
 
 
     public SessionInitiatorHandler(SessionInitiator sessionInitiator, String senderCompId, String targetCompId, Consumer<String> stringConsumer) throws IOException {
-
         sessionData = new SessionData(senderCompId, targetCompId);
         this.sessionInitiator = sessionInitiator;
         this.stringConsumer = stringConsumer;
-
-
-
-
     }
 
     public void sendLogoutMessage() throws IOException{

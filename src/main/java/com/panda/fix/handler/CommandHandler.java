@@ -4,6 +4,7 @@ import com.panda.fix.FixEngine;
 import com.panda.fix.operator.Command;
 import com.panda.fix.operator.CommandFactory;
 import com.panda.fix.operator.CommandOperator;
+import com.panda.fix.operator.CommandResult;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,7 +40,9 @@ public class CommandHandler extends ChannelInboundHandlerAdapter {
 
         Command command = CommandFactory.createCommand(inMsg, fixEngine);
 
-        command.execute();
+        CommandResult result = command.execute();
+
+        ctx.writeAndFlush(Unpooled.copiedBuffer(result.getResult(), CharsetUtil.US_ASCII));
 
     }
 

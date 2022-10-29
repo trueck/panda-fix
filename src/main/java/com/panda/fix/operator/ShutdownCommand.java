@@ -12,8 +12,8 @@ public class ShutdownCommand implements Command {
     }
 
     @Override
-    public void execute() {
+    public CommandResult execute() {
         this.fixEngine.shutdown();
-
+        return new CommandResult("success");
     }
 }
