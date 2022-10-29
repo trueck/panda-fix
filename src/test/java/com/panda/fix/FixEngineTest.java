@@ -23,6 +23,7 @@ public class FixEngineTest {
     @Test
     public void testStart(){
         fixEngine.getFixSessions().entrySet().stream().forEach(this::replaceFixSessions);
+        fixEngine.setCommandOperator(new DummyCommandOperator(0, null));
         fixEngine.start();
     }
 

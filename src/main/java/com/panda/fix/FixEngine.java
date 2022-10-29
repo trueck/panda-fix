@@ -27,6 +27,7 @@ public class FixEngine {
             FixSession fixSession = createFixSession(sessionName, sessionProp);
             fixSessions.put(sessionName, fixSession);
         });
+        commandOperator = new CommandOperator(34000, this);
     }
 
     private FixSession createFixSession(String sessionName, Properties sessionProp) {
@@ -55,7 +56,7 @@ public class FixEngine {
     }
 
     private void startCommandOperator(){
-        commandOperator = new CommandOperator(34000, this);
+
         commandOperator.start();
     }
 
