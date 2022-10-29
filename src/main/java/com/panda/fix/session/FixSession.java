@@ -16,6 +16,18 @@ public class FixSession {
     private String host;
     private FixSessionConnection fixSessionConnection;
 
+    public FixSession() {
+    }
+
+    public FixSession(String sessionName, String targetCompId, String sourceComId, FixSessionType type, int port, String host) {
+        this.sessionName = sessionName;
+        this.targetCompId = targetCompId;
+        this.sourceComId = sourceComId;
+        this.type = type;
+        this.port = port;
+        this.host = host;
+    }
+
     public void start(){
         logger.info("Fix session {} is starting.", sessionName);
         if(type.equals(FixSessionType.INITIATOR)){

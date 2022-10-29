@@ -76,7 +76,11 @@ public class FixEngine {
 
     private void stopFixSessions() {
         fixSessions.forEach((sessionName, fixSession) -> {
-            fixSession.stop();
+            try {
+                fixSession.stop();
+            }catch (Exception e){
+                logger.error("Got error when stopping fix session {}", sessionName, e);
+            }
         });
     }
 
@@ -85,7 +89,7 @@ public class FixEngine {
             try {
                 fixSession.start();
             }catch (Exception e){
-                logger.error(e.getMessage());
+                logger.error("Got error when starting fix session {}", sessionName, e);
             }
         });
     }
