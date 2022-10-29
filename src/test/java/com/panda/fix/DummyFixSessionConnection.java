@@ -1,5 +1,6 @@
 package com.panda.fix;
 
+import com.panda.fix.constant.SessionStatus;
 import com.panda.fix.session.FixSessionConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +16,12 @@ public class DummyFixSessionConnection extends FixSessionConnection {
     @Override
     public void start() {
         logger.info("pretent to start {}", this.getSessionName());
+        setStatus(SessionStatus.CONNECTED);
     }
 
     @Override
     public void stop() {
         logger.info("pretent to stop {}", this.getSessionName());
+        setStatus(SessionStatus.DISCONNECTED);
     }
 }
