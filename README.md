@@ -22,3 +22,13 @@ java com.panda.fix.FixEngine conf/fix-sell.ini
 
 start buy side fix engine to initial the connection:
 java com.panda.fix.FixEngine conf/fix-buy.ini
+
+
+there is an operator port for the fix engine. You can use
+
+telnet localhost xxxx
+
+to connect to the operator. Then send the commands to fix engine, e.g.
+
+list sessions
+shutdown
