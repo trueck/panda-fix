@@ -35,6 +35,7 @@ public class CommandHandler extends ChannelInboundHandlerAdapter {
         this.ctx = ctx;
         ByteBuf in = (ByteBuf) msg;
         String inMsg = in.toString(CharsetUtil.US_ASCII);
+        inMsg = inMsg.substring(0, inMsg.indexOf("\r"));
 
         logger.info("Received command: {}", inMsg);
 
@@ -55,4 +56,10 @@ public class CommandHandler extends ChannelInboundHandlerAdapter {
         ctx.close();
     }
 
+    public static void main(String[] args) {
+        String input = "list sessions\n";
+        String inMsg = input.replace("\n", "");
+
+        System.out.println(inMsg +  "[");
+    }
 }

@@ -16,16 +16,14 @@ public class FixSession {
     private String host;
     private FixSessionConnection fixSessionConnection;
 
-    public FixSession() {
-    }
 
-    public FixSession(String sessionName, String targetCompId, String sourceComId, FixSessionType type, int port, String host) {
+    public FixSession(String sessionName, String targetCompId, String sourceComId, FixSessionType type, String host, int port) {
         this.sessionName = sessionName;
         this.targetCompId = targetCompId;
         this.sourceComId = sourceComId;
         this.type = type;
-        this.port = port;
         this.host = host;
+        this.port = port;
     }
 
     public void start(){

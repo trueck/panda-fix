@@ -23,23 +23,21 @@ public class FixEngine {
     public FixEngine(String configFile) {
         fixConfig = new FixConfig(configFile);
         fixSessions = new HashMap<>();
-        fixConfig.getSessionProperties().forEach((sessionName, sessionProp)->{
-            FixSession fixSession = createFixSession(sessionName, sessionProp);
-            fixSessions.put(sessionName, fixSession);
-        });
-        commandOperator = new CommandOperator(34000, this);
+        fixConfig.getSessionProperties().forEach(this::createFixSession);
+        commandOperator = new CommandOperator(34001, this);
     }
 
-    private FixSession createFixSession(String sessionName, Properties sessionProp) {
-        FixSession fixSession = new FixSession();
-        fixSession.setSessionName(sessionName);
-        fixSession.setType(sessionProp.containsKey("remote_port")?FixSessionType.INITIATOR:FixSessionType.ACCEPTOR);
+
+    private void createFixSession(String sessionName, Properties sessionProp) {
         String port = sessionProp.containsKey("remote_port")?sessionProp.getProperty("remote_port"):sessionProp.getProperty("listener_port");
-        fixSession.setPort(Integer.parseInt(port));
-        fixSession.setHost(sessionProp.getProperty("remote_host"));
-        fixSession.setSourceComId(FixUtil.getSourceCompIdFromSessionName(sessionName));
-        fixSession.setTargetCompId(FixUtil.getTargetCompIdFromSessionName(sessionName));
-        return fixSession;
+        FixSession fixSession = new FixSession(sessionName,
+                FixUtil.getTargetCompIdFromSessionName(sessionName),
+                FixUtil.getSourceCompIdFromSessionName(sessionName),
+                sessionProp.containsKey("remote_port")?FixSessionType.INITIATOR:FixSessionType.ACCEPTOR,
+                sessionProp.getProperty("remote_host"),
+                Integer.parseInt(port)
+                );
+        fixSessions.put(sessionName, fixSession);
     }
 
     public static void main(String[] args) {
@@ -49,14 +47,13 @@ public class FixEngine {
 
     public void start() {
         logger.info("Panda Fix is starting.");
+        addShutdownHook();
         startCommandOperator();
         startFixSessions();
-        addShutdownHook();
         logger.info("Panda Fix is started.");
     }
 
     private void startCommandOperator(){
-
         commandOperator.start();
     }
 
