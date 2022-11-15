@@ -17,5 +17,6 @@ public class FixConfigTest {
         assertEquals("32000", fixConfig.getSessionProperties().get("NEWFIXENGINE2-APPIA").getProperty("listener_port"));
         assertEquals("[TEST_TS]", fixConfig.getSessionProperties().get("NEWFIXENGINE2-APPIA").getProperty("trading_session"));
         assertEquals("0 0 19 ? * TUE-SAT", fixConfig.getTradingSessionProperties().get("TEST_TS").getProperty("trading_session_end_time"));
+        assertEquals(34000, fixConfig.getOperatorPort());
     }
 }

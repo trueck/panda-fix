@@ -9,7 +9,7 @@ public class DummyFixSession extends FixSession {
     private static final Logger logger = LoggerFactory.getLogger(DummyFixSession.class);
     public DummyFixSession(FixSession fixSession) {
         super(fixSession.getSessionName(), fixSession.getTargetCompId(), fixSession.getSourceComId(),
-                fixSession.getType(), fixSession.getPort(), fixSession.getHost());
+                fixSession.getType(), fixSession.getHost(), fixSession.getPort());
     }
 
     @Override

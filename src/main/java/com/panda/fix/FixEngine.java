@@ -24,7 +24,7 @@ public class FixEngine {
         fixConfig = new FixConfig(configFile);
         fixSessions = new HashMap<>();
         fixConfig.getSessionProperties().forEach(this::createFixSession);
-        commandOperator = new CommandOperator(34001, this);
+        commandOperator = new CommandOperator(fixConfig.getOperatorPort(), this);
     }
 
 
@@ -115,4 +115,6 @@ public class FixEngine {
     public void setCommandOperator(CommandOperator commandOperator) {
         this.commandOperator = commandOperator;
     }
+
+
 }

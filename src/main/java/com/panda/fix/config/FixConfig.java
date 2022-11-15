@@ -16,6 +16,7 @@ public class FixConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(FixConfig.class);
 
+    private int operatorPort;
     private Map<String, Properties> sessionProperties = new HashMap<>();
     private Map<String, Properties> tradingSessionProperties = new HashMap<>();
 
@@ -63,6 +64,8 @@ public class FixConfig {
                     }
                 }else if(line.startsWith("connection=")){
                     getSessionProperties().put(line.substring(line.indexOf("[")+1, line.indexOf("]")).trim(), new Properties());
+                }else if(line.startsWith("operator_port=")){
+                    this.operatorPort = Integer.parseInt(line.substring(line.indexOf("=") + 1, line.length()));
                 }else if(line.startsWith("trading_session=")){
                     getTradingSessionProperties().put(line.substring(line.indexOf("[")+1, line.indexOf("]")).trim(), new Properties());
                 }
@@ -87,5 +90,9 @@ public class FixConfig {
 
     public void setTradingSessionProperties(Map<String, Properties> tradingSessionProperties) {
         this.tradingSessionProperties = tradingSessionProperties;
+    }
+
+    public int getOperatorPort() {
+        return operatorPort;
     }
 }
