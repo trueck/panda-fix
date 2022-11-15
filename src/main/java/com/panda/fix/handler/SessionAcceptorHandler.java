@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +27,8 @@ public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
     private SessionAcceptor echoServer;
     private ChannelHandlerContext ctx;
     private FixSessionConnection fixSessionConnection;
+
+    private List<MessageListener> listeners = new ArrayList<>();
 
     public SessionAcceptorHandler(SessionAcceptor sessionAcceptor, String senderCompId, String targetCompId, FixSessionConnection fixSessionConnection) throws IOException {
         sessionData = new SessionData(senderCompId, targetCompId);
@@ -40,6 +44,7 @@ public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
     public void sendMessage(String message) throws IOException{
         ctx.writeAndFlush(Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII));
         sessionData.writeToOutDataFile(message);
+        logger.info("sent message: [{}]", message);
     }
 
     private void sendLoginAck() throws IOException{
@@ -76,10 +81,15 @@ public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
             sendHeartbeat();
             sessionData.setLogout(false);
             fixSessionConnection.setStatus(SessionStatus.CONNECTED);
-        }
-        if(!sessionData.isLogout() && sessionData.isLogoutMsg(inMsg)){
+        }else if(!sessionData.isLogout() && sessionData.isLogoutMsg(inMsg)){
             sendLogoutMessage();
+        }else if(!sessionData.isHeartBeat(inMsg)){
+            notifyListeners(inMsg);
         }
+    }
+
+    private void notifyListeners(String inMsg) {
+        listeners.forEach(listener -> listener.onMessage(inMsg));
     }
 
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception{
@@ -98,4 +108,9 @@ public class SessionAcceptorHandler extends ChannelInboundHandlerAdapter {
     public void setSessionData(SessionData sessionData) {
         this.sessionData = sessionData;
     }
+
+    public void addListener(MessageListener listener){
+        listeners.add(listener);
+    }
+
 }

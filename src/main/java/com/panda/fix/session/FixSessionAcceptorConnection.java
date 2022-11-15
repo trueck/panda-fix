@@ -8,6 +8,8 @@ import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class FixSessionAcceptorConnection extends FixSessionConnection{
 
     private static final Logger logger = LoggerFactory.getLogger(FixSessionAcceptorConnection.class);
@@ -67,5 +69,12 @@ public class FixSessionAcceptorConnection extends FixSessionConnection{
         } catch (Exception e) {
             logger.error("Got error when stopping fix session " + sessionName, e);
         }
+    }
+
+    @Override
+    public void send(String message) throws IOException {
+        getSessionAcceptor().getSessionAcceptorHandler().sendMessage(
+                getSessionAcceptor().getSessionAcceptorHandler().getSessionData().createMessage(message)
+        );
     }
 }

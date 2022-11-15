@@ -6,6 +6,8 @@ import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public abstract class FixSessionConnection {
 
     private static final Logger logger = LoggerFactory.getLogger(FixSessionConnection.class);
@@ -28,7 +30,7 @@ public abstract class FixSessionConnection {
 
     public abstract void stop();
 
-    public void send(String message){
+    public void send(String message) throws IOException {
 
     }
 

@@ -1,5 +1,6 @@
 package com.panda.fix.handler;
 
+import com.panda.fix.util.MessageUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -102,6 +103,28 @@ public class SessionData {
         return logonMsg;
     }
 
+    public String createMessage(String messageTemplate) {
+
+        String sendingTime = formatDate(new Date(), SENDING_TIME_FORMAT);
+
+
+        String message = MessageUtil.setValueOfTag(messageTemplate, "8", "FIX.4.2");
+        message = MessageUtil.setValueOfTag(message, "49", this.senderCompId);
+        message = MessageUtil.setValueOfTag(message, "56", this.targetCompId);
+        message = MessageUtil.setValueOfTag(message, "34", String.valueOf(outSeq));
+        message = MessageUtil.setValueOfTag(message, "52", sendingTime);
+        message = MessageUtil.setMessageLength(message);
+
+        int sum = checksum(message.toString().getBytes(), true);
+        String sumStr = String.valueOf(sum);
+        while(sumStr.length() < 3){
+            sumStr = "0" + sumStr;
+        }
+        message = MessageUtil.setValueOfTag(message, "10", sumStr);
+
+        return message;
+    }
+
     public static int checksum(byte[] data, boolean isEntireMessage){
         int sum = 0;
         int len = data.length;
@@ -175,6 +198,10 @@ public class SessionData {
 
     public boolean isLogin(String inMsg) {
         return inMsg.indexOf("35=A") > -1;
+    }
+
+    public boolean isHeartBeat(String inMsg) {
+        return inMsg.indexOf("35=0") > -1;
     }
 
     public boolean isLoginAck(String msg){

@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -23,7 +25,7 @@ public class SessionInitiatorHandler extends SimpleChannelInboundHandler<ByteBuf
     private SessionInitiator sessionInitiator;
     private Consumer<String> stringConsumer;
 
-
+    private List<MessageListener> listeners = new ArrayList<>();
 
     public SessionInitiatorHandler(SessionInitiator sessionInitiator, String senderCompId, String targetCompId, Consumer<String> stringConsumer) throws IOException {
         sessionData = new SessionData(senderCompId, targetCompId);
@@ -41,9 +43,10 @@ public class SessionInitiatorHandler extends SimpleChannelInboundHandler<ByteBuf
         sessionData.setLogout(false);
     }
 
-    private void sendMessage(String message) throws IOException{
+    public void sendMessage(String message) throws IOException{
         ctx.writeAndFlush(Unpooled.copiedBuffer(message, CharsetUtil.US_ASCII));
         sessionData.writeToOutDataFile(message);
+        logger.info("sent message: [{}]", message);
     }
 
     private void sendHeartbeat(ChannelHandlerContext ctx){
@@ -84,13 +87,16 @@ public class SessionInitiatorHandler extends SimpleChannelInboundHandler<ByteBuf
 
         if(sessionData.isLoginAck(msg)){
             sendHeartbeat(ctx);
-        }
-        if(!sessionData.isLogout() && sessionData.isLogoutMsg(msg)){
+        }else if(!sessionData.isLogout() && sessionData.isLogoutMsg(msg)){
             sendLogoutMessage();
+        }else if(!sessionData.isHeartBeat(msg)){
+            notifyListeners(msg);
         }
-        if(stringConsumer != null){
-            stringConsumer.accept(msg);
-        }
+
+    }
+
+    private void notifyListeners(String inMsg) {
+        listeners.forEach(listener -> listener.onMessage(inMsg));
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
@@ -104,5 +110,9 @@ public class SessionInitiatorHandler extends SimpleChannelInboundHandler<ByteBuf
 
     public void setSessionData(SessionData sessionData) {
         this.sessionData = sessionData;
+    }
+
+    public void addListener(MessageListener listener){
+        listeners.add(listener);
     }
 }

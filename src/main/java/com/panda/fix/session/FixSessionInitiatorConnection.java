@@ -8,6 +8,8 @@ import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class FixSessionInitiatorConnection extends FixSessionConnection{
 
     private static final Logger logger = LoggerFactory.getLogger(FixSessionInitiatorConnection.class);
@@ -66,11 +68,18 @@ public class FixSessionInitiatorConnection extends FixSessionConnection{
             setSessionInitiator(sessionInitiator);
         } catch (Exception e){
             setStatus(SessionStatus.DISCONNECTED);
-            throw new ApplicationException("failed to start session:" + sessionName + ", caused by: " + e.getCause().getMessage());
+            logger.error("failed to start session {}", sessionName, e);
+            throw new ApplicationException("failed to start session:" + sessionName, e);
         }
         setStatus(SessionStatus.CONNECTED);
         logger.info("session started: {}", sessionName);
     }
 
 
+    @Override
+    public void send(String message) throws IOException {
+        getSessionInitiator().getSessionInitiatorHandler().sendMessage(
+                getSessionInitiator().getSessionInitiatorHandler().getSessionData().createMessage(message)
+        );
+    }
 }
